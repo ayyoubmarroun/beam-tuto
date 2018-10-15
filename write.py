@@ -1,12 +1,14 @@
 import apache_beam
 
-class WriteToCSV(apache_beam.DoFn):
+class FormatToCSV(apache_beam.DoFn):
 
     def process(self, element, *args, **kwargs):
         
-        result = ','.join(element)
+        result = objectToStr(element)
         return [result] 
 
-def WriteToFile(filename, value):
-    with open(filename, 'wa') as f:
-        f.write(value)
+
+def objectToStr(object_):
+    if isinstance(object_, (list,tuple)):
+        return ','.join(map(objectToStr,object_))
+    return str(object_)

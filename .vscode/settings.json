@@ -1,0 +1,13 @@
+{
+    "python.pythonPath": "venv/bin/python",
+    "files.exclude": {
+        "**/.DS_Store": true,
+        "**/.git": true,
+        "**/.hg": true,
+        "**/.svn": true,
+        "**/.vscode": true,
+        "**/*.pyc": true,
+        "**/CVS": true,
+        "**/venv": true
+    }
+}

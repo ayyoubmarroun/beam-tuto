@@ -1,22 +1,70 @@
 import apache_beam
 
+
 class CalculateWeek(apache_beam.DoFn):
 
     def process(self, element, *args, **kwargs):
-        element['week'] = element.get('date').strftime("%W")
+        result = element.copy()
+        result['week'] = result.get('timestamp').strftime('%W')
+        return [result]
 
 
-class CollectTotals(apache_beam.DoFn):
+class CollectBuysPrice(apache_beam.DoFn):
 
-        def process(self, element, *args, **kwargs):
+    def process(self, element, *args, **kwargs):
+        week = element.get('week')
+        id_ = element.get('id')
 
-                result = [
-                        (`{element.week},{element.id}`,
-                        element.get('totals', {}).get('buys', {}).get('price'),
-                        element.get('totals', {}).get('buys', {}).get('quantity'),
-                        element.get('totals', {}).get('sells', {}).get('price'),
-                        element.get('totals', {}).get('sells', {}).get('quantity') )
-                ]
+        result = [
+            (
+                (week, id_),
+                element.get('totals_buys_price'),
+            )
+        ]
 
-                return result
-                
+        return result
+
+class CollectBuysQuantity(apache_beam.DoFn):
+
+    def process(self, element, *args, **kwargs):
+        week = element.get('week')
+        id_ = element.get('id')
+
+        result = [
+            (
+                (week, id_),
+                element.get('totals_buys_quantity'),
+            )
+        ]
+
+        return result
+
+class CollectSellsPrice(apache_beam.DoFn):
+
+    def process(self, element, *args, **kwargs):
+        week = element.get('week')
+        id_ = element.get('id')
+
+        result = [
+            (
+                (week, id_),
+                element.get('totals_sells_price'),
+            )
+        ]
+
+        return result
+
+class CollectSellsQuantity(apache_beam.DoFn):
+
+    def process(self, element, *args, **kwargs):
+        week = element.get('week')
+        id_ = element.get('id')
+
+        result = [
+            (
+                (week, id_),
+                element.get('totals_sells_quantity'),
+            )
+        ]
+
+        return result
