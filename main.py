@@ -6,13 +6,13 @@ from write import FormatToCSV
 
 
 if __name__ == '__main__':
-    filename = 'data/input/export-bq_export_20181013_000000000007.json'
-    output_filenae = 'data/output/output_procesed'
+    input_ = 'data/input/*'
+    output_filename = 'data/output/output_procesed'
     pipeline_options = beam.options.pipeline_options.PipelineOptions()
     with beam.Pipeline(options=pipeline_options) as p:
         rows = (
             p |
-            ReadFromText('data/input/*') |
+            ReadFromText(input_) |
             # beam.Flatten() |
             beam.ParDo(ParseJSON()) |
             beam.ParDo(CalculateWeek())
@@ -65,4 +65,4 @@ if __name__ == '__main__':
             "Format Output" >> beam.ParDo(FormatToCSV())
         )
         header = 'week,id,buys_price,buys_quantity,sells_price,sells_quantity'
-        result | beam.io.textio.WriteToText(output_filenae, file_name_suffix='.csv', header=header)
+        result | beam.io.textio.WriteToText(output_filename, file_name_suffix='.csv', header=header)
